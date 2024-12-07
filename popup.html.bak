@@ -1,0 +1,12 @@
+<!doctype html>  
+<!-- this is a comment -->
+<html>  
+    <head><title>activity</title></head>  
+<body>  
+	<input type="text" id="studentIdTextboxInPopup" placeholder="Enter Student ID">
+	<button id="submitIDButton">Submit ID</button>
+    <script src="popup.js"></script> 
+	
+
+</body>
+</html>  

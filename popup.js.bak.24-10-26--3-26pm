@@ -1,0 +1,176 @@
+/*
+In process of editing to run as single injection for each submission.
+Single button is new intent.
+
+User should:
+	1. Enter the student ID to submit into the popup.
+	2. Click the submit id button.
+	3. At this time, the script will check to see if a script has already been injected, and inject it if not.
+		3.1 The injected script will then wait for a message from popup.js that will include a student id.
+			3.1.1 When the script receives this message from popup.js, it will:
+				a. click the current sign up Option
+				b. enter that student id in the student id field (barcode I think?)
+				c. enter the teacher name in the teacher field
+				(d. eventually also click submit, but lets just make this much work first lol)
+		3.1. Initialize the studentID variable in popup.js OR update it if it is already initialized.
+		3.2  Initialize the teacher or update it if it already exists.
+		3.3. Send a message to the injected stcript content to update the page.
+
+
+I think more needs to happen, but this is what I've got so far.
+I also want to build in console.log messages to be able to debug.
+
+
+Could I actually just do everything from here? do I have to "inject" a script??
+
+* important
+! warning
+? question
+TODO: to do
+
+*/
+
+//First, get a live reference to the textbox from the popup.html.
+const studentIdTextboxInPopup = document.getElementById('studentIdTextboxInPopup');
+
+//Next, add a listener to respond to someone clicking the button with id: submitIDButton.
+document.getElementById('submitIDButton').message('click', injectTheScript);
+
+//Now, lets declare the function that will happen when the listener hears the button click.
+function getStudentID () {
+
+	//We'll set a variable to equal the text from that textbox in the popup.
+	var currentStudentID = studentIdTextboxInPopup.value;
+
+	//Let's also print that current value to the console so we can check if needed.
+	console.log("the currentStudentID has been set to %s", currentStudentID);
+	
+	//Lets return that student id we got
+	
+	return currentStudentID;
+
+}
+
+// this will be a function just to test stuff in the console as needed
+function testTheConsole () {
+	
+	let outerID = getStudentID();
+
+	//Lets see if we can read that variable outside of that function above
+
+	console.log("This is an attempt to read the currentStudentID outside of it's function: %s", outerID);
+	
+	//Okay, we can do it by assigning it like this as a return. so I think we'll keep the return option in that function. 
+	
+}
+
+// * TODO: Figure out why this doesn't work more than once. 
+function injectTheScript() {
+  // Get the current active tab to do script stuff with.
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    // In that active tab, do script stuff.
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      
+	  // Check to see if the script has already been injected before injecting.
+      function: () => {
+
+        // Check for this by checking to see if we've set the indicator variable previously.
+        if (typeof window.scriptInjected === 'undefined') {
+          // If we have not, we're going to inject, so set the indicator now, for a future check.
+          window.scriptInjected = true;
+          // Now that we have set that indicator, let's set teacherNameBox to be the textbox expecting the teacher name.
+          const teacherNameBox = document.querySelector('input[name="data[teacher1]"]');
+		  
+		  // Now let's make sure also that the activeTab hasn't been declared yet either.
+          if (typeof activeTab === 'undefined') {
+            // If it has not, lets assign that to the proper constant.
+            const activeTab = document.querySelector('.tab-pane.active');
+            // Now lets find the currently available "Sign Up" button within the active tab.
+            let signUpButton = activeTab.querySelector('.btn.btn-danger.btn-sign-up');
+            // Go ahead and actually click that "Sign Up" button to open the box.
+            signUpButton.click();
+
+          } else {
+			  console.log("The active tab is already defined. Moving on.");
+		  }
+		  
+          if (teacherNameBox) {
+            teacherNameBox.focus();
+            teacherNameBox.value = 'Osgood';
+          } else {
+            console.error('Could not find the text field with name "data[teacher1]"');
+          }
+
+
+          // Listen for messages from popup.js
+          chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            if (request.action === 'processStudentID') {
+              // Access student ID from request.studentID and process it
+              console.log("Received student ID:", request.studentID);
+              // You'll need to add your logic here to use the received studentID
+
+
+			  // Example: Assuming the input field for student ID has the ID 'studentIDInput'
+              const studentIDInput = document.getElementById('studentIDInput');
+              if (studentIDInput) {
+                studentIDInput.value = request.studentID;
+                console.log("Student ID filled in the input field.");
+              } else {
+                console.error('Could not find the student ID input field.');
+              }
+            }
+		  });
+		}
+	  }
+	});
+  });
+}
+
+
+// TODO: make sure this works.
+// It's giving an error related to the second query selector, I think because it's not injected.
+
+function openTheSubmissionDialog () {
+	
+	//Okay, lets get this submission dialog open. We've done it before!
+	
+	//first lets see if activeTab has yet been defined and do stuff if not.
+	if (typeof activeTab === 'undefined') {
+			
+			console.log("We have found the activeTab to not be defined");
+
+            // If it has not, we are going to get the active tab which isn't going to change.
+            const activeTab = document.querySelector('.tab-pane.active');
+
+            // We are also going to find the currently available "Sign Up" button within the active tab.
+            // We are going to make this a let because it could be different on successive runs.
+            
+			/*
+			* TODO: this is not working yet, it's saying it can't read the properties.
+			* I am thinking it is because it is not being *injected* into the page. 
+			*/
+			
+			let signUpButton = activeTab.querySelector('.btn.btn-danger.btn-sign-up');
+
+            // Now we can work with that specific "Sign Up" button and click it to open it.
+            signUpButton.click();
+
+          }
+	else {
+		
+		console.log("We have found the activeTab TO be defined!");
+		
+		// assign the variable
+		let signUpButton = activeTab.querySelector('.btn.btn-danger.btn-sign-up');
+
+        // Now we can work with that specific "Sign Up" button and click it to open it.
+        signUpButton.click();
+	}
+	
+}
+
+//Okay, it definitely does NOT read that variable outside of that function. That was kind of expected.
+//What if I make it a var?
+//Nope. Probably have to have the function return it, which I dont think I need.
+

@@ -1,0 +1,36 @@
+
+// define a function which will inject a script
+function injectTheScript() {
+  if (typeof window.scriptInjected === 'undefined') {
+	  // set this to true now so we know for later
+	  window.scriptInjected = true;
+	  // Get the current active tab to inject into.
+	  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+		// Inject the script into that active tab.
+		chrome.scripting.executeScript({
+		  target: { tabId: tabs[0].id },
+		  files: ['content_script.js']
+		 });
+	  });
+  } else {
+	  console.error("There is already a script injected into this page.");
+}
+
+//inject the script
+injectTheScript();
+
+// Get the live reference to the text box so we can call it later.
+const studentIDPopupField = document.getElementById('studentIDPopupField');
+
+// Add event listener so that we can tell when the submitIDButton is clicked.
+document.getElementById('submitIDButton').addEventListener('click', () => {
+  // Take the value from the studentIDPopupField
+  let currentStudentID = studentIDPopupField.value;
+
+  // Send currentStudentID in a message to the content_script
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { studentIDValue: currentStudentID });
+  });
+});
+
+

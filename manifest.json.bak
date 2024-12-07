@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+
+    "name": "Signout Assistant",
+    "description": "Helps you to submit student IDs faster/easier to LibraryTrac",
+    "version": "1.0",
+    "permissions": ["scripting"],
+    "host_permissions": [
+		"https://www.librarytrac.com/kiosk*",
+		"<all_urls>"
+		],
+
+    "action": {
+        "default_title": "Click to open interface.",
+        "default_popup": "popup.html"
+    }
+	"content_scripts": [
+	{
+		"matches": ["<all_urls>"],
+		"js": ["content-script.js"]
+	}
+	]
+} 

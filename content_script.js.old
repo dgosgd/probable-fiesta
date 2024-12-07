@@ -1,0 +1,33 @@
+// First set the studentID and the teacherName
+
+// Declare studentID once on each execution, keeping the scope more local
+let studentID;
+// the teacherName won't change between sessions or at all
+const teacherName = document.querySelector('input[name="data[teacher1]"]'); 
+
+// Check if activeTab is already defined
+if (typeof activeTab === 'undefined') {
+  // Get the active tab
+  const activeTab = document.querySelector('.tab-pane.active'); 
+
+  // Find the "Sign Up" button within the active tab
+  const signUpButton = activeTab.querySelector('.btn.btn-danger.btn-sign-up');
+
+  // Now you can work with the specific "Sign Up" button
+  signUpButton.click(); // Example: Automatically click the button
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.barcode) {
+        studentID = request.barcode; // Update the value here
+        // ... rest of your code to use studentID and fill the form ... 
+    }
+});
+
+
+if (teacherName) { 
+    teacherName.focus();
+    teacherName.value = 'Osgood'; 
+} else {
+    console.error('Could not find the text field with name "data[teacher1]"');
+}

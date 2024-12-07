@@ -1,0 +1,49 @@
+/*
+In process of editing to run as single injection for each submission.
+Single button is new intent.
+
+User should:
+	1. Enter the student ID to submit into the popup.
+	2. Click the submit id button.
+	3. At this time, the script will check to see if a script has already been injected, and inject it if not.
+		3.1 The injected script will then wait for a message from popup.js that will include a student id.
+			3.1.1 When the script receives this message from popup.js, it will:
+				a. click the current sign up Option
+				b. enter that student id in the student id field (barcode I think?)
+				c. enter the teacher name in the teacher field
+				(d. eventually also click submit, but lets just make this much work first lol)
+		3.1. Initialize the studentID variable in popup.js OR update it if it is already initialized.
+		3.2  Initialize the teacher or update it if it already exists.
+		3.3. Send a message to the injected stcript content to update the page.
+
+
+I think more needs to happen, but this is what I've got so far.
+I also want to build in console.log messages to be able to debug.
+
+
+Could I actually just do everything from here? do I have to "inject" a script??
+*/
+
+//First, get a live reference to the textbox from the popup.html.
+const studentIdTextboxInPopup = document.getElementById('studentIdTextboxInPopup');
+
+//Next, add a listener to respond to someone clicking the button with id: submitIDButton.
+document.getElementById('submitIDButton').addEventListener('click', setStudentID);
+
+//Now, lets declare the function that will happen when the listener hears the button click.
+function setStudentID () {
+
+	//We'll set a variable to equal the text from that textbox in the popup.
+	let currentStudentID = studentIdTextboxInPopup.value;
+
+	//Let's also print that current value to the console so we can check if needed.
+	console.log("the currentStudentID has been set to %s", currentStudentID);
+
+}
+
+
+//Lets see if we can read that variable outside of that function above:
+console.log("This is an attempt to read the currentStudentID outside of it's function: %s", currentStudentID);
+//Okay, it definitely does NOT read that variable outside of that function. That was kind of expected.
+//What if I make it a var?
+

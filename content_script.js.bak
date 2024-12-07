@@ -1,0 +1,63 @@
+// Make a variable for the teacher name.
+
+const teacherName = "Osgood"
+
+// The function processStudentID will:
+// 1. Take in the student id.
+// 2. Open the currently available signout dialog with the button.
+// 3. add the student id into the student id text box
+// 4. add the teacher name into the teacher name box. 
+// 5. Return nothing.
+
+// * ! I am going to ignore if-stuff for now unless it's neede because it makes my head hurt.
+
+
+function processASignUp (studentID) {
+	// Get the active tab
+	const activeTab = document.querySelector('.tab-pane.active');
+	
+	// Find the "Sign Up" button within the active tab
+	if (activeTab) {
+		const signUpButton = activeTab.querySelector('.btn.btn-danger.btn-sign-up');
+	} else {
+		console.error('activeTab not defined to select .btn.btn-danger.btn-sign-up');
+	}
+	
+	// Click the "Sign Up" button to open the signup dialog
+	if (signUpButton) {
+		signUpButton.click();
+	} else {
+		console.error('signUpButton not defined to be able to click');
+	}
+
+	// create a reference to the student id entry text field
+	const studentIDInputField = document.querySelector('input[name="data[barcode]"]'); 
+	
+	// create a reference to the teachername text field
+	const teacherNameInputField = document.querySelector('input[name="data[teacher1]"]'); 
+	
+	// Set the value of the teacher text field to Osgood if it has been located.
+	if (teacherNameInputField) { 
+		teacherNameInputField.focus();
+		teacherNameInputField.value = 'Osgood'; 
+	} else {
+		console.error('Could not find the text field with name "data[teacher1]"');
+	}
+	
+	// Set the value of the student id textbox field to the provided studentID if it has been located.
+	if (studentIDInputField) { 
+		studentIDInputField.focus();
+		studentIDInputField.value = studentID; 
+	} else {
+		console.error('Could not find the text field with name "data[barcode]"');
+	}
+	
+}
+
+
+//Create a listener for the message containing the student ID. 
+// The listener should call the function processStudentID
+
+
+
+
