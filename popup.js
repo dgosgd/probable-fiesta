@@ -41,7 +41,7 @@ function submitID() {
 // Add event listener so that we can tell when the submitIDButton is clicked.
 document.getElementById('submitIDButton').addEventListener('click', () => submitID());
 
-// Also add a listener that will "push" the button if Enter is pressed whiel in the text field.
+// Also add a listener that will "push" the button if Enter is pressed while in the text field.
 studentIDPopupField.addEventListener("keyup", (event) => {
     if (event.key === "Enter") {
         event.preventDefault();
@@ -49,6 +49,15 @@ studentIDPopupField.addEventListener("keyup", (event) => {
     }
 })
 
+// Add an event listener that can tell when the Simulate Esc Key button is pressed.
+document.getElementById('escPressButton').addEventListener('click', () => simulateEsc());
+
+// Function that will send a message to the content_script.js telling it the Escape Key Simulation button was pressed.
+function simulateEsc() {
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { escapeKeySimulated: true });
+  });
+}
 /*
 
 NOT WORKING YET
