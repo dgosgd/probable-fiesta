@@ -4,7 +4,7 @@
     "name": "Signout Assistant",
     "description": "Helps you to submit student IDs faster/easier to LibraryTrac",
     "version": "1.0",
-    "permissions": ["scripting"],
+    "permissions": ["scripting","privacy"],
     "host_permissions": [
 		"https://www.librarytrac.com/kiosk*",
 		"<all_urls>"
