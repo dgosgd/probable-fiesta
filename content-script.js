@@ -77,6 +77,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	
 });
 
+
+
+//Stuff to Add
+/*
+//function to parse a list of student ID's
+it would need to 
+1. receive a string separated by spaces or something
+2. find out how many student ids are in it by finding all the spaces
+3. return an array consisting of each student id
+
+
+--> so I guess we need a function to return the array. 
+
+function convertToArray(inputString) {
+	const str = "This is a sample string";
+	const arrayOfStudentIDs = inputString.split(" ");
+	console.log(strArray); // Output: ["This", "is", "a", "sample", "string"]
+
+}
+
+*/
+
 //ISSUES: Fix another time....
 
 /*
